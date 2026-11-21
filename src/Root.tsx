@@ -1,19 +1,5 @@
 import "./index.css";
 import { Composition } from "remotion";
-import { DockerExplainer } from "./DockerExplainer/DockerExplainer";
-import { dockerExplainerSchema } from "./DockerExplainer/types";
-import {
-  CitVoiceStudioRepo,
-  citVoiceStudioRepoDuration,
-} from "./CitVoiceStudioRepo/CitVoiceStudioRepo";
-import { citVoiceStudioRepoSchema } from "./CitVoiceStudioRepo/types";
-import { DevVsDevops, devVsDevopsDuration } from "./DevVsDevops/DevVsDevops";
-import { devVsDevopsSchema } from "./DevVsDevops/types";
-import {
-  EmbedGoogleDriveVideo,
-  embedGoogleDriveVideoDuration,
-} from "./EmbedGoogleDriveVideo/EmbedGoogleDriveVideo";
-import { embedGoogleDriveVideoSchema } from "./EmbedGoogleDriveVideo/types";
 
 import {
   PonytailRepo,
