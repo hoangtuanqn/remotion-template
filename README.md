@@ -94,10 +94,10 @@ Mở [http://localhost:3000](http://localhost:3000) để xem video, rồi nghe 
 
 | Skill | Dùng khi | Đầu vào | Kết quả |
 | :--- | :--- | :--- | :--- |
-| `remotion-topic-explainer` | Giải thích một chủ đề công nghệ | Tên chủ đề | Video 50-60s, 6 cảnh |
-| `repo-to-video` | Giới thiệu một GitHub repo | Link GitHub hoặc `owner/repo` | Video 50-60s kèm ảnh chụp repo và bảng dữ kiện |
-| `comparison-video` | So sánh hai lựa chọn | `A vs B` | Video 50-60s, có kết luận chọn bên nào khi nào, kèm bảng dữ kiện |
-| `content-to-video` | Làm video từ nội dung có sẵn | URL, file `.txt` hoặc kịch bản dán | Video 50-60s có ghi nguồn, kèm bảng dữ kiện nếu là bài viết |
+| `remotion-topic-explainer` | Giải thích một chủ đề công nghệ | Tên chủ đề | Video 60-90s, 6 cảnh |
+| `repo-to-video` | Giới thiệu một GitHub repo | Link GitHub hoặc `owner/repo` | Video 60-90s kèm ảnh chụp repo và bảng dữ kiện |
+| `comparison-video` | So sánh hai lựa chọn | `A vs B` | Video 60-90s, có kết luận chọn bên nào khi nào, kèm bảng dữ kiện |
+| `content-to-video` | Làm video từ nội dung có sẵn | URL, file `.txt` hoặc kịch bản dán | Video 60-90s có ghi nguồn, kèm bảng dữ kiện nếu là bài viết |
 
 ### Cách gọi skill
 

@@ -96,10 +96,10 @@ Open [http://localhost:3000](http://localhost:3000) to watch the video, then lis
 
 | Skill | Use it to | Input | Output |
 | :--- | :--- | :--- | :--- |
-| `remotion-topic-explainer` | Explain a tech topic | Topic name | 50-60s video with 6 scenes |
-| `repo-to-video` | Showcase a GitHub repo | GitHub link or `owner/repo` | 50-60s video with a repo screenshot and a fact sheet |
-| `comparison-video` | Compare two options | `A vs B` | 50-60s video that ends with when to pick each one, plus a fact sheet |
-| `content-to-video` | Turn existing content into a video | URL, `.txt` file or pasted script | 50-60s video that credits the source, plus a fact sheet for articles |
+| `remotion-topic-explainer` | Explain a tech topic | Topic name | 60-90s video with 6 scenes |
+| `repo-to-video` | Showcase a GitHub repo | GitHub link or `owner/repo` | 60-90s video with a repo screenshot and a fact sheet |
+| `comparison-video` | Compare two options | `A vs B` | 60-90s video that ends with when to pick each one, plus a fact sheet |
+| `content-to-video` | Turn existing content into a video | URL, `.txt` file or pasted script | 60-90s video that credits the source, plus a fact sheet for articles |
 
 ### Calling a skill
 

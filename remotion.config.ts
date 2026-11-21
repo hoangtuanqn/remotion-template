@@ -5,7 +5,13 @@
 
 import { Config } from "@remotion/cli/config";
 import { enableTailwind } from '@remotion/tailwind-v4';
+import { watchCompositionDeletes } from "./scripts/composition-cleanup";
 
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
 Config.overrideWebpackConfig(enableTailwind);
+
+// Chỉ chạy khi mở Studio: xóa composition trên giao diện sẽ xóa luôn file liên quan.
+if (process.argv.includes("studio")) {
+  watchCompositionDeletes();
+}

@@ -1,12 +1,12 @@
 ---
 name: remotion-topic-explainer
 description: >-
-  Creates professional 50-60s vertical explainer videos (9:16 format, 1080x1920 @ 30fps) for any given topic using Remotion, styled with modern aesthetics and narrated by natural voiceover using edge-tts-universal or CIT Voice Studio (selected via TTS_PROVIDER in .env). Follows remotion-dev/skills best practices for smooth springs, typography, sequence timing, and visual engagement.
+  Creates professional 60-90s vertical explainer videos (9:16 format, 1080x1920 @ 30fps) for any given topic using Remotion, styled with modern aesthetics and narrated by natural voiceover using edge-tts-universal or CIT Voice Studio (selected via TTS_PROVIDER in .env). Follows remotion-dev/skills best practices for smooth springs, typography, sequence timing, and visual engagement.
 ---
 
-# Remotion Topic Explainer Video Skill (50-60s)
+# Remotion Topic Explainer Video Skill (60-90s)
 
-This skill guides you in creating high-quality, 50–60 second short-form explainer videos (TikTok / YouTube Shorts / Reels format: 1080x1920 @ 30fps) from any given topic.
+This skill guides you in creating high-quality, 60–90 second short-form explainer videos (TikTok / YouTube Shorts / Reels format: 1080x1920 @ 30fps) from any given topic.
 
 It combines:
 1. **Visual Best Practices** from `remotion-dev/skills` (frame-accurate springs, clamping interpolations, sequence composition, typography hierarchy).
@@ -15,20 +15,22 @@ It combines:
 
 ---
 
-## 1. Video Structure & Timing (50-60s / 1500-1800 frames @ 30fps)
+## 1. Video Structure & Timing (60-90s / 1800-2700 frames @ 30fps)
 
 A captivating short video follows the **Hook-Problem-Solution-Value-Outro** framework:
 
 | Scene | Name | Time | Frame Range (@ 30fps) | Purpose & Visuals |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Hook** | 0s – 5s | ~150 frames | Gây chú ý tức thì: Tiêu đề lớn, câu hỏi kích thích tò mò, floating badge. |
-| **2** | **Context / Pain Point** | 5s – 15s | ~300 frames | Nêu vấn đề hoặc bối cảnh vì sao chủ đề này quan trọng. Icon cảnh báo/so sánh. |
-| **3** | **Core Concept Part 1** | 15s – 28s | ~390 frames | Giải thích nguyên lý cốt lõi thứ 1: Card kính, biểu tượng minh họa, từ khóa nổi bật. |
-| **4** | **Core Concept Part 2** | 28s – 42s | ~420 frames | Mở rộng chi tiết hoặc cơ chế hoạt động: Quy trình 3 bước, sơ đồ luồng mượt mà. |
-| **5** | **Real-World Impact** | 42s – 52s | ~300 frames | Ứng dụng thực tế, lời khuyên thực chiến hoặc số liệu ấn tượng. |
-| **6** | **Outro & CTA** | 52s – 60s | ~240 frames | Đúc kết 1 câu đắt giá, lời kêu gọi Like/Share/Follow & thương hiệu cá nhân. |
+| **1** | **Hook** | 0s – 6s | ~180 frames | Lời hứa hoặc câu hỏi gây tò mò kèm con số, nói trong 2 giây đầu. Tiêu đề lớn, hiệu ứng hook của `video-style`. |
+| **2** | **Context / Pain Point** | 6s – 17s | ~330 frames | Nêu vấn đề hoặc bối cảnh vì sao chủ đề này quan trọng. Hai thẻ đối lập trượt vào từ hai phía. |
+| **3** | **Core Concept Part 1** | 17s – 32s | ~450 frames | Nguyên lý cốt lõi thứ 1: thẻ kính mờ, từ khóa nổi bật. |
+| **4** | **Core Concept Part 2** | 32s – 48s | ~480 frames | Cơ chế hoạt động: quy trình 3 bước, đường nối chạy dần. |
+| **5** | **Real-World Impact** | 48s – 64s | ~480 frames | Ứng dụng thực tế, lời khuyên hoặc số liệu đếm lên. |
+| **6** | **Outro & CTA** | 64s – 75s | ~330 frames | Đúc kết 1 câu đắt giá, nút theo dõi kênh. |
 
-**Tổng thời lượng:** 1500 – 1800 frames (khoảng 50 – 60 giây).
+Cần dài tới 90s thì thêm 1-2 cảnh phụ (ví dụ cụ thể, lưu ý) trước Outro. Cảnh nào quá 13s thì tách đôi.
+
+**Tổng thời lượng:** 1800 – 2700 frames (khoảng 60 – 90 giây).
 
 ---
 
@@ -169,20 +171,7 @@ const d2 = audioManifest.scenes[1].durationInFrames - 10 + 3;
 
 
 ### 3.4 Quy chuẩn Thiết kế Visual (Vertical 1080x1920)
-1. **Background**: Dark Mode cao cấp (`bg-slate-950` hoặc gradient `from-slate-950 via-zinc-900 to-black`) kết hợp hiệu ứng radial glow/grid mờ.
-2. **Glassmorphism Cards**:
-   - `backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl`
-3. **Thương hiệu Kênh Phía Trên (Brand Header)**:
-   - Luôn hiển thị component thương hiệu `⚡ [CHANNEL_NAME]` ở phía trên ở giữa (`top: 150px`, `left: 50%` translate-x) đọc từ biến môi trường `CHANNEL_NAME` (mặc định: "CƯỜNG IT") để tránh bị thanh tìm kiếm và tab Đang theo dõi / Dành cho bạn của nền tảng (TikTok, Shorts, Reels) che khuất.
-4. **Typography Tối ưu cho Mobile (1080x1920)**:
-   - Tiêu đề chính: 72px - 96px, in đậm font-black, gradient sắc nét.
-   - Nội dung thẻ / trích dẫn: 40px - 50px font-extrabold.
-   - Text phụ / giải thích: 28px - 36px font-semibold.
-   - Badge danh mục: 28px - 32px font-black uppercase.
-5. **Bố cục Trung tâm & Phụ đề 1 Dòng (Single-Line Chunked Caption)**:
-   - **Bố cục chính**: Toàn bộ khối nội dung quan trọng BẮT BUỘC nằm ở **chính giữa màn hình** (`justify-center` theo chiều dọc).
-   - **Vị trí Phụ đề**: Nằm phía dưới khối trung tâm với khoảng cách thoáng đãng (`mt-64`), không bị che bởi thanh công cụ dưới của TikTok/Reels.
-   - **Định dạng 1 dòng**: Phụ đề chỉ xuất hiện **1 dòng duy nhất (khoảng 5-7 từ)**, chữ to `text-4xl font-black`, tự động cắt theo cụm câu và chuyển đổi mượt mà theo đúng tiến trình giọng đọc (`durationInFrames`). Dùng pill card `rounded-full bg-slate-950/95 border-2 border-sky-400/50 px-10 py-5` với highlight từ khóa.
+Toàn bộ phong cách (nền, thẻ kính mờ, thương hiệu, cỡ chữ, bố cục, phụ đề, chuyển động, hook) theo skill `video-style`. Sao chép `theme.ts` và `components/` từ `src/ClaudeBugHunterRepo/`. Không dùng emoji hay icon trang trí trong chữ.
 
 ---
 
@@ -192,7 +181,7 @@ Khi nhận được yêu cầu: *"Tạo video giải thích về [Chủ đề X]
 
 ### Bước 1: Soạn Kịch bản (Scripting)
 1. Xác định 6 phân cảnh (Hook, Problem, Concept 1, Concept 2, Impact, Outro).
-2. Viết lời thoại tiếng Việt tự nhiên, súc tích, câu ngắn (mỗi cảnh 15-30 từ).
+2. Viết lời thoại tiếng Việt tự nhiên, súc tích, câu ngắn (tổng 260-330 từ, mỗi cảnh 35-50 từ). Cảnh 1 mở bằng lời hứa hoặc kết quả cụ thể; xem phần Hook và Lời thoại của `video-style`.
 
 ### Bước 2: Sinh Giọng Đọc (TTS Generation)
 1. Đọc `TTS_PROVIDER` trong `.env` để biết đang dùng edge hay cit.

@@ -1,11 +1,13 @@
 ---
 name: remotion-topic-explainer
-description: Tạo video ngắn 50-60s dạng video dọc (9:16, 1080x1920 @ 30fps) giải thích bất kỳ chủ đề lập trình/công nghệ nào bằng Remotion. Kết hợp giọng đọc AI Voiceover tự nhiên từ edge-tts-universal hoặc CIT Voice Studio (chọn qua TTS_PROVIDER trong .env), căn giữa nội dung trực quan, huy hiệu thương hiệu kênh phía trên và phụ đề 1 dòng gãy gọn.
+description: Tạo video ngắn 60-90s dạng video dọc (9:16, 1080x1920 @ 30fps) giải thích bất kỳ chủ đề lập trình/công nghệ nào bằng Remotion. Kết hợp giọng đọc AI Voiceover tự nhiên từ edge-tts-universal hoặc CIT Voice Studio (chọn qua TTS_PROVIDER trong .env), căn giữa nội dung trực quan, huy hiệu thương hiệu kênh phía trên và phụ đề 1 dòng gãy gọn.
 ---
 
-# Remotion Topic Explainer Skill for Claude (50-60s Explainer Videos)
+# Remotion Topic Explainer Skill for Claude (60-90s Explainer Videos)
 
-Kỹ năng này giúp Claude tự động tạo các video ngắn 50–60 giây (tỷ lệ dọc 9:16, chuẩn 1080x1920 @ 30fps cho TikTok, YouTube Shorts, Facebook Reels) từ bất kỳ chủ đề lập trình hay công nghệ nào bằng **Remotion**.
+Kỹ năng này giúp Claude tự động tạo các video ngắn 60–90 giây (tỷ lệ dọc 9:16, chuẩn 1080x1920 @ 30fps cho TikTok, YouTube Shorts, Facebook Reels) từ bất kỳ chủ đề lập trình hay công nghệ nào bằng **Remotion**.
+
+Phong cách hình ảnh, chuyển động, phụ đề, hook và cách viết lời thoại nằm ở skill `video-style`. Đọc nó trước khi dựng; skill này chỉ giữ phần riêng của nó.
 
 ---
 
@@ -15,11 +17,8 @@ Kỹ năng này giúp Claude tự động tạo các video ngắn 50–60 giây 
    - `edge`: `edge-tts-universal` (online, miễn phí, không cần API key) - xuất `.mp3`.
    - `cit`: **CIT Voice Studio** (offline, giọng tiếng Việt chất lượng phòng thu) - xuất `.wav`/`.mp3`. Tải app tại [github.com/Cuongyd196/cit-voice-studio](https://github.com/Cuongyd196/cit-voice-studio), tài liệu API: `docs/cit-voice-studio.md`.
 3. **Đồng bộ Thời lượng Frame-Accurate**: Script tự động đo độ dài audio (MP3/WAV) và tính toán số frame chính xác (`durationInFrames`) cho từng phân cảnh.
-4. **Bố cục Chuẩn Mobile**:
-   - **Thương hiệu kênh**: Huy hiệu `⚡ [CHANNEL_NAME]` ở đỉnh giữa (`top: 150px`), tránh thanh tìm kiếm của TikTok/Shorts.
-   - **Khối trung tâm**: Toàn bộ thẻ trích dẫn, sơ đồ luồng, biểu đồ so sánh nằm ở **chính giữa màn hình**.
-   - **Phụ đề 1 dòng (Single-Line Caption)**: Nằm thoáng đãng phía dưới (`mt-64`), tự động tách 5–7 từ/lần, đồng bộ chuyển cụm từ theo nhịp phát âm.
-   - **Chuyển cảnh dồn dập (Snappy Transition)**: Buffer chỉ `+3 frames` giữa các phân cảnh giúp video liên tục, cuốn hút.
+4. **Phong cách và bố cục**: theo `video-style` (nền tối có hạt sáng, thẻ kính mờ, nhãn cảnh dạng viên thuốc, phụ đề 1 cụm tô cam từ khoá, logo hoặc huy hiệu kênh ở góc trái trên, nội dung căn giữa).
+   - **Chuyển cảnh dồn dập**: buffer chỉ `+3 frames` giữa các phân cảnh, kèm vệt sáng quét đầu cảnh.
 
 ---
 
@@ -49,16 +48,18 @@ CHANNEL_NAME="CƯỜNG IT"
 
 ---
 
-## 3. Cấu trúc Kịch bản 6 Phân cảnh (50-60s / 1200-1800 frames)
+## 3. Cấu trúc Kịch bản 6 Phân cảnh (60-90s / 1800-2700 frames)
 
 | Phân cảnh | Vai trò | Mục tiêu & Bố cục Visual |
 | :--- | :--- | :--- |
-| **Scene 1: Hook** | Mở đầu giật gân (0s - 5s) | Tiêu đề lớn (`text-8xl font-black`), câu hỏi tò mò, icon 3D/SVG nổi bật. |
-| **Scene 2: Pain Point** | Nỗi đau / Bối cảnh (5s - 12s) | Thẻ trích dẫn tâm lý (`text-5xl`), so sánh Local vs Server / Trước vs Sau. |
-| **Scene 3: Solution Part 1** | Giải pháp cốt lõi (12s - 20s) | Card Container / Hộp đóng gói linh kiện, hiệu ứng spring trồi vào. |
-| **Scene 4: Solution Part 2** | Quy trình hoạt động (20s - 30s) | Sơ đồ luồng dọc 3 bước (VD: Dockerfile -> Image -> Container) kèm mũi tên. |
-| **Scene 5: Benefits** | Lợi ích vượt trội (30s - 40s) | 3 thẻ so sánh thông số (Tốc độ 10x, Tiết kiệm tài nguyên, Deploy mọi nơi). |
-| **Scene 6: Outro & CTA** | Đúc kết & Kêu gọi (40s - 50s) | Thẻ tổng kết phát sáng, 2 nút CTA (Thả tim & Follow kênh đón xem video mới). |
+| **Scene 1: Hook** | Mở đầu giật gân (0s - 6s) | Lời hứa hoặc câu hỏi gây tò mò kèm con số, nói trong 2 giây đầu. Tiêu đề lớn và hiệu ứng hook của `video-style`. |
+| **Scene 2: Pain Point** | Nỗi đau / Bối cảnh (6s - 16s) | Hai thẻ đối lập trượt vào từ hai phía (Local vs Server, Trước vs Sau). |
+| **Scene 3: Solution Part 1** | Giải pháp cốt lõi (16s - 30s) | Thẻ kính mờ nêu khái niệm, hiệu ứng `spring` có độ nảy. |
+| **Scene 4: Solution Part 2** | Quy trình hoạt động (30s - 46s) | Sơ đồ luồng 3 bước, từng bước hiện lần lượt, đường nối chạy dần. |
+| **Scene 5: Benefits** | Lợi ích vượt trội (46s - 62s) | 3 hàng, mỗi hàng một con số đếm lên và mô tả ngắn. |
+| **Scene 6: Outro & CTA** | Đúc kết & Kêu gọi (62s - 75s) | Câu đúc kết, nút theo dõi kênh nhấp nháy nhẹ. |
+
+Cần dài tới 90s thì thêm 1-2 cảnh phụ (ví dụ cụ thể, lưu ý hay hiểu lầm thường gặp) trước Outro.
 
 ---
 
@@ -67,7 +68,7 @@ CHANNEL_NAME="CƯỜNG IT"
 Khi nhận lệnh: *"Tạo video giải thích về [Chủ đề X]"*, Claude thực hiện tuần tự 5 bước:
 
 ### Bước 1: Soạn kịch bản Voiceover 6 cảnh
-Soạn 6 câu thoại súc tích, tự nhiên, đánh trúng tâm lý người xem (mỗi câu 15-25 từ).
+Soạn 6-8 đoạn thoại súc tích, tự nhiên, đánh trúng tâm lý người xem (tổng 260-330 từ, mỗi cảnh 35-50 từ). Cảnh 1 mở bằng lời hứa hoặc kết quả cụ thể, theo phần Hook và Lời thoại của `video-style`.
 
 ### Bước 2: Sinh Voiceover (provider theo `TTS_PROVIDER`)
 Tạo script `scripts/generate-<topic>-audio.ts` gọi `generateTopicVoices` từ `generate-tts.ts`, chạy `npx tsx scripts/generate-<topic>-audio.ts`. Audio lưu vào `public/audio/<TopicName>/` (`.mp3` với edge, `.wav` với cit), `manifest.json` sinh tự động. `src/<TopicName>/audioData.ts` chỉ được sinh khi thư mục `src/<TopicName>/` đã tồn tại, nên tạo thư mục này trước khi chạy script:
@@ -99,8 +100,8 @@ src/<TopicName>/
 ├── types.ts                 # Props schema với zColor, z.string()
 ├── audioData.ts             # Lưu metadata frame sinh ra từ manifest.json
 ├── components/
-│   ├── BrandHeader.tsx      # Huy hiệu kênh cố định top: 150px
-│   └── SubtitleBox.tsx      # Hộp phụ đề 1 dòng (5-7 từ/lần) mt-64
+│   ├── BrandHeader.tsx      # Logo hoặc huy hiệu kênh (top: 100, left: 88)
+│   └── SubtitleBox.tsx      # Phụ đề 1 cụm (tối đa 28 ký tự, tô cam từ khoá), top: 1480
 └── scenes/
     ├── Scene1Hook.tsx
     ├── Scene2Problem.tsx
@@ -113,8 +114,8 @@ src/<TopicName>/
 ### Bước 4: Nguyên tắc Code Remotion
 1. **Spring Animation**: Luôn dùng `spring({ frame, fps, config: { damping: 12, stiffness: 100 } })`.
 2. **Clamped Interpolation**: Luôn có `{ extrapolateLeft: "clamp", extrapolateRight: "clamp" }`.
-3. **Căn giữa nội dung**: `<AbsoluteFill className="flex flex-col items-center justify-center px-10 text-white">`.
-4. **Phụ đề**: Đặt `<SubtitleBox text="..." durationInFrames={d} className="mt-64" />` ngay dưới khối trung tâm.
+3. **Giao diện và phụ đề**: dùng `SceneShell`, `SubtitleBox`, `Backdrop`, `theme.ts` theo `video-style`.
+4. **Chuyển động**: `Reveal`, `Typewriter`, `CountUp` và hiệu ứng hook theo `video-style`.
 5. **Thời lượng cảnh**: `const d1 = audioManifest.scenes[0].durationInFrames - 10 + 3;` (Buffer snappy `+3 frames`). Giá trị trong manifest đã gồm 10 frame đệm, nên trừ đi trước khi cộng buffer.
 6. **Đường dẫn audio**: Luôn dùng `staticFile(audioManifest.scenes[i].audioPath)`, KHÔNG hardcode đuôi `.mp3` (provider cit xuất `.wav`).
 

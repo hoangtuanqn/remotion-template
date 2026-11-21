@@ -5,9 +5,11 @@ description: Dùng khi người dùng muốn làm video ngắn so sánh hai lự
 
 # Comparison Video
 
-Tạo video dọc 50-60s (1080x1920, 30fps) so sánh hai lựa chọn A và B bằng Remotion. Người xem phải biết nên chọn bên nào trong trường hợp của họ, và mọi thông tin phải đúng, công bằng với cả hai bên.
+Tạo video dọc 60-90s (1080x1920, 30fps) so sánh hai lựa chọn A và B bằng Remotion. Người xem phải biết nên chọn bên nào trong trường hợp của họ, và mọi thông tin phải đúng, công bằng với cả hai bên.
 
 Skill này tự đủ, chỉ cần `scripts/generate-tts.ts`, `.env`, `public/fonts/`, `public/sfx/` và `src/sfx/` có sẵn trong repo template. Không cần ảnh, nhạc hay template nào khác.
+
+Phong cách hình ảnh, chuyển động, phụ đề, hook và cách viết lời thoại nằm ở skill `video-style`. Đọc nó trước khi dựng; skill này chỉ giữ phần riêng của nó.
 
 ## Bước 1: Xác định đề bài
 
@@ -40,7 +42,7 @@ Quy tắc nguồn:
 
 | Cảnh | Nội dung | Bên được làm nổi bật |
 | :--- | :--- | :--- |
-| 1 Hook | Câu hỏi "A hay B?" gắn với tình huống thật | Cả hai |
+| 1 Hook | Câu hỏi "A hay B?" gắn với tình huống thật, kèm kết quả hoặc con số gây tò mò, nói trong 2 giây đầu | Cả hai |
 | 2 Khác biệt cốt lõi | Một câu nói trúng điểm khác nhau lớn nhất | Cả hai |
 | 3 Bên A | A là gì, một điểm mạnh, một điểm yếu (hoặc việc chính, thách thức) | A |
 | 4 Bên B | B là gì, một điểm mạnh, một điểm yếu (hoặc việc chính, thách thức) | B |
@@ -49,7 +51,7 @@ Quy tắc nguồn:
 
 Quy tắc nội dung:
 
-- Mỗi cảnh khoảng 30-35 từ (35 từ mỗi cảnh ra khoảng 59s với `cit`). Mỗi câu thoại phải khớp một dòng trong `facts.md`.
+- Toàn bộ lời thoại khoảng 260-330 từ, mỗi cảnh 40-55 từ, cảnh nào quá 13s thì tách đôi. Mỗi câu thoại phải khớp một dòng trong `facts.md`.
 - A và B có cùng số điểm mạnh và điểm yếu, cùng thời lượng gần bằng nhau.
 - Kết luận theo điều kiện: "Chọn A khi..., chọn B khi...". Không tuyên bố một bên thắng tuyệt đối, và không kết thúc bằng "tuỳ nhu cầu".
 - Người dùng yêu cầu ủng hộ một bên: nói rõ đó là ý kiến, và vẫn nêu điểm yếu của bên đó.
@@ -87,7 +89,7 @@ generateTopicVoices("<TopicName>", scenes).catch((error) => {
 
 - Audio và `manifest.json` nằm ở `public/audio/<TopicName>/`. `src/<TopicName>/audioData.ts` cũng được sinh tự động, nhưng chỉ khi thư mục `src/<TopicName>/` đã tồn tại, nên tạo thư mục này trước khi chạy script.
 - File audio đã có sẽ được dùng lại. Sửa lời thoại thì xoá file audio của cảnh đó trước khi sinh lại.
-- Tổng thời lượng dưới 50s: viết dài thêm lời thoại rồi sinh lại. Trên 60s: rút ngắn.
+- Tổng thời lượng dưới 60s: viết dài thêm lời thoại rồi sinh lại. Trên 90s: rút ngắn.
 - Lời thoại viết "A hay B" hoặc "A và B", không viết "vs" hay ký hiệu. Người dùng báo một từ bị đọc lặp hoặc đọc sai: đổi câu để bỏ từ đó khỏi lời thoại, vẫn giữ trên màn hình. Tên tiếng Anh kèm số hay gặp lỗi này với `cit`.
 
 ## Bước 5: Dựng video
@@ -96,12 +98,13 @@ Cấu trúc thư mục:
 
 ```text
 src/<TopicName>/
-├── <TopicName>.tsx          # Nền, BrandHeader, VersusBar, <Series> các cảnh
+├── <TopicName>.tsx          # Backdrop, BrandHeader, VersusBar, <Series> các cảnh, thanh tiến trình
 ├── types.ts                 # Schema zod, gồm channelName
 ├── audioData.ts
 ├── useVietnameseFont.ts
 ├── sideCues.ts              # Bên nào đang được nhắc, theo từng câu
-├── components/              # BrandHeader, VersusBar, SubtitleBox
+├── theme.ts                 # Màu, thẻ kính mờ, chữ gradient
+├── components/              # Backdrop, BrandHeader, VersusBar, SceneShell (gồm Reveal), SubtitleBox, Motion
 └── scenes/                  # Scene1Hook.tsx ... Scene6Verdict.tsx
 ```
 
@@ -135,17 +138,17 @@ export function useVietnameseFont(): void {
 }
 ```
 
-Màu: A luôn là `#54f0ca`, B luôn là `#ffb454`, trên nền tối `#070e19`. Mỗi bên giữ một màu suốt video. Không dùng đỏ và xanh lá cho hai bên, vì chúng ngụ ý một bên sai và một bên đúng.
+Màu: A luôn là `cyan` (`#00d2ff`), B luôn là tím `#a78bfa`, trên nền `Backdrop` của `video-style`. Màu cam `orange` chỉ dành cho từ khoá phụ đề, không dùng cho A hay B. Mỗi bên giữ một màu suốt video. Không dùng đỏ và xanh lá cho hai bên, vì chúng ngụ ý một bên sai và một bên đúng.
 
 Bố cục cố định:
 
-- Huy hiệu `⚡ {channelName}` ở `top: 150`, căn giữa ngang. `channelName` lấy từ `process.env.CHANNEL_NAME`.
+- Thương hiệu (logo hoặc huy hiệu chữ) ở `top: 100`, `left: 88`, theo `video-style`.
 - `VersusBar` ở `top: 250`, cao 120px, hiện từ cảnh 2 tới hết video (cảnh 1 đã có tên trong 2 thẻ): tên A bên trái, chữ `VS` ở giữa, tên B bên phải. Bên đang được nhắc sáng màu, bên còn lại mờ `opacity: 0.35`, chuyển trong 8 frame. Nói chung về cả hai thì cả hai cùng sáng.
 - Độ sáng đổi theo từng câu, không theo từng cảnh. Trong cùng một cảnh, nói tới A thì A sáng, chuyển sang B thì B sáng. Áp dụng cho cả `VersusBar` và các thẻ của từng bên ở cảnh 2, 5, 6.
 - Vùng nội dung: `left: 88`, `right: 88`, `top: 400`, cao 1060px, căn giữa theo chiều dọc. Cảnh 1 dùng `top: 260`.
-- Phụ đề một dòng ở `top: 1520`, cỡ 37px, mỗi lần tối đa 6 từ, chia thời gian theo số ký tự, ngắt ở dấu câu khi có thể.
-- Thanh tiến trình ở `bottom: 190`. Không đặt nội dung thấp hơn mức này, vì nút của TikTok và Reels sẽ che.
-- Cỡ chữ: tiêu đề 76-104px, nội dung 36-48px, phụ 28-32px.
+- Phụ đề theo `video-style`: `top: 1480`, chữ 56px, mỗi cụm tối đa 28 ký tự, tô cam một từ khoá bằng `*dấu sao*`.
+- Thanh tiến trình mảnh ở mép trên (`top: 0`). Không đặt nội dung thấp hơn `top: 1470`, vì phụ đề và nút của TikTok, Reels nằm ở dưới.
+- Cỡ chữ: tiêu đề 60-90px, nội dung 36-56px, phụ 26-32px.
 
 Tạo `src/<TopicName>/sideCues.ts` để biết bên nào đang được nhắc. Mỗi cảnh liệt kê các từ mở đầu đoạn nói về một bên, theo đúng thứ tự đọc. Thời điểm ước lượng theo vị trí ký tự, giống phụ đề:
 
@@ -192,16 +195,14 @@ export const sideOpacity = (sceneIndex: number, localFrame: number, own: "a" | "
 
 Từng cảnh:
 
-- Cảnh 1: hai thẻ cao bằng nhau, mỗi thẻ ghi tên một bên cỡ lớn và một dòng mô tả, chữ `VS` nằm giữa, dưới là câu hỏi hook. Đây là thumbnail.
+- Cảnh 1: hai thẻ cao bằng nhau, mỗi thẻ ghi tên một bên cỡ lớn và một dòng mô tả, chữ `VS` nằm giữa, dưới là câu hỏi hook. Đây là thumbnail, thêm hiệu ứng hook của `video-style`.
 - Cảnh 3 và 4: cùng một bố cục cho cả hai bên: định nghĩa, thẻ `ĐIỂM MẠNH`, thẻ `ĐIỂM YẾU` (vai trò hay nghề nghiệp thì dùng `VIỆC CHÍNH`, `THÁCH THỨC`).
 - Cảnh 5: mỗi tiêu chí là một khối: tên tiêu chí căn giữa, dưới là hai ô giá trị rộng bằng nhau, A trái, B phải. Hiện lần lượt theo lời đọc. Giá trị tối đa khoảng 18 ký tự một dòng, tối đa 2 dòng.
 - Cảnh 6: hai thẻ `CHỌN A KHI` và `CHỌN B KHI`, rồi dòng theo dõi kênh.
 
 Chuyển động và thời lượng:
 
-- Dùng `spring()` cho hiệu ứng xuất hiện, không dùng CSS transition.
-- `interpolate()` luôn kèm `extrapolateLeft: "clamp"` và `extrapolateRight: "clamp"`.
-- Frame 0 là thumbnail trên các nền tảng: cảnh 1 không có hiệu ứng xuất hiện, mọi nội dung hiện đủ ngay từ frame 0.
+- Chuyển động (`Reveal`, `Typewriter`, `CountUp`), hook và quy tắc `spring()`, `interpolate()` theo `video-style`. Cảnh 1 đủ nội dung ngay từ frame 0.
 - Thời lượng cảnh: `durationInFrames - 10 + 3`. Giá trị trong manifest đã gồm 10 frame đệm. Cảnh cuối cộng thêm 40 frame để giữ CTA.
 - Audio: `<Audio src={staticFile(scene.audioPath)} />`. Không viết cứng đuôi file, vì `edge` và `cit` xuất định dạng khác nhau.
 
@@ -240,7 +241,7 @@ Hiệu ứng âm thanh: dùng `<SfxTrack cues={...} />` từ `src/sfx/SfxTrack.t
    ```
 3. Render thêm `--frame=0` và mở xem như một thumbnail: phải đủ nội dung, không trống.
 4. Ở cảnh 2, 5, 6, render thêm ảnh lúc đang nói về A và lúc đang nói về B, để xem đúng bên nào sáng theo phụ đề.
-5. Kiểm tra: chữ không tràn, không rớt một từ xuống dòng, A và B không bị đảo vị trí hay màu.
+5. Kiểm tra: không cụm phụ đề nào quá 28 ký tự, chữ không tràn, không rớt một từ xuống dòng, A và B không bị đảo vị trí hay màu.
 6. Đọc lại kịch bản theo `facts.md`: mỗi câu có nguồn, hai bên có độ dài gần bằng nhau, kết luận theo điều kiện.
 7. Render bản cuối:
    ```bash
