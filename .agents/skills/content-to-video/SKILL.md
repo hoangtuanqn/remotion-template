@@ -5,9 +5,11 @@ description: Dùng khi người dùng đưa một URL bài viết hoặc blog, m
 
 # Content To Video
 
-Tạo video dọc 50-60s (1080x1920, 30fps) bằng Remotion từ nội dung người dùng đưa. Video chỉ nói những gì có trong nguồn.
+Tạo video dọc 60-90s (1080x1920, 30fps) bằng Remotion từ nội dung người dùng đưa. Video chỉ nói những gì có trong nguồn.
 
 Skill này tự đủ, chỉ cần `scripts/generate-tts.ts`, `.env`, `public/fonts/`, `public/sfx/` và `src/sfx/` có sẵn trong repo template.
+
+Phong cách hình ảnh, chuyển động, phụ đề, hook và cách viết lời thoại nằm ở skill `video-style`. Đọc nó trước khi dựng; skill này chỉ giữ phần riêng của nó.
 
 Không dùng skill này khi đầu vào là GitHub repo (dùng `repo-to-video`), so sánh hai lựa chọn (dùng `comparison-video`), hoặc chỉ có tên chủ đề mà không có nội dung (dùng `remotion-topic-explainer`).
 
@@ -69,7 +71,7 @@ Chụp trang nguồn thành `public/content/<TopicName>/source.png` bằng trìn
 
 ## Bước 3: Viết kịch bản
 
-Toàn bộ lời thoại khoảng 200-225 từ, chia đều cho 5-7 cảnh (6 cảnh thì khoảng 36 từ mỗi cảnh, 7 cảnh thì khoảng 31 từ). Từ ở đây là cụm cách nhau bằng khoảng trắng; đếm lại trước khi sinh giọng. Dưới đây lấy 6 cảnh làm mẫu.
+Toàn bộ lời thoại khoảng 260-330 từ, chia cho 7-9 cảnh (mỗi cảnh 30-45 từ, cảnh nào quá 13s thì tách đôi). Từ ở đây là cụm cách nhau bằng khoảng trắng; đếm lại trước khi sinh giọng. Bảng dưới là khung 6 cảnh; thêm cảnh ý chính để đủ thời lượng.
 
 ### Từ URL hoặc bài viết
 
@@ -77,9 +79,9 @@ Ghi `out/content-research/<TopicName>/facts.md`, mỗi dòng gồm dữ kiện v
 
 | Cảnh | Nội dung | Hiển thị |
 | :--- | :--- | :--- |
-| 1 Hook | Điều đáng chú ý nhất của bài, dạng câu hỏi hoặc con số | Tiêu đề lớn, tên nguồn |
+| 1 Hook | Điều đáng chú ý nhất của bài, nói thành lời hứa hoặc con số trong 2 giây đầu | Tiêu đề lớn, tên nguồn, hiệu ứng hook |
 | 2 Nguồn và bối cảnh | Ai công bố, về chuyện gì | Phần đầu `source.png`, ngày đăng |
-| 3-5 Ý chính | Mỗi cảnh một ý, xếp theo mức quan trọng. Bài hướng dẫn thì theo thứ tự các bước | Thẻ, số liệu, bảng ngắn |
+| 3 trở đi: Ý chính | Mỗi cảnh một ý, xếp theo mức quan trọng. Bài hướng dẫn thì theo thứ tự các bước | Thẻ, số liệu, bảng ngắn |
 | 6 Outro | Ai nên quan tâm, lưu ý nếu có, CTA | Tên nguồn, URL rút gọn |
 
 Quy tắc nội dung:
@@ -97,7 +99,7 @@ Quy tắc nội dung:
 ### Từ kịch bản dán
 
 - Giữ nguyên từng chữ. Chỉ chia cảnh theo đoạn hoặc theo ý, không viết lại, không thêm CTA.
-- Dài hơn 60s hoặc ngắn hơn 50s theo Bước 4: giữ nguyên lời, báo thời lượng thật và đề xuất câu cần cắt hoặc thêm. Chỉ sửa khi người dùng đồng ý.
+- Dài hơn 90s hoặc ngắn hơn 60s theo Bước 4: giữ nguyên lời, báo thời lượng thật và đề xuất câu cần cắt hoặc thêm. Chỉ sửa khi người dùng đồng ý.
 - Không cần `facts.md`, vì đây là nội dung của người dùng. Thấy thông tin có vẻ sai thì báo, không tự sửa.
 - Tự chọn hình cho từng cảnh theo nội dung: tiêu đề, thẻ, số liệu. Chữ trên màn hình được rút gọn từ lời thoại.
 
@@ -112,13 +114,14 @@ Phụ đề viết riêng ở `src/<TopicName>/captions.ts`, mỗi cảnh một 
 
 ```typescript
 export const sceneCaptions: string[] = [
-  "Theo Google, giá giảm 30% | so với bản trước, | còn $0.07 mỗi giây cho 720p.",
+  "Theo *Google*, giá giảm 30% | so với bản trước, | còn $0.07 mỗi giây | cho *720p*.",
   // mỗi cảnh một dòng
 ];
 ```
 
 - Cùng nội dung với lời đọc, nhưng số hiện bằng chữ số.
-- Mỗi cụm là một ý trọn, tối đa 45 ký tự. Ngắt ở dấu câu hoặc chỗ hợp nghĩa, không cắt đôi từ ghép hay số.
+- Mỗi cụm tối đa 28 ký tự, thường 2-5 từ, ngắt ở chỗ hợp nghĩa, không cắt đôi từ ghép hay số.
+- Bọc một từ khoá mỗi cụm trong `*dấu sao*` để tô cam. Chi tiết và mã `SubtitleBox` ở skill `video-style`.
 
 ## Bước 4: Sinh giọng đọc
 
@@ -142,7 +145,7 @@ generateTopicVoices("<TopicName>", scenes).catch((error) => {
 
 - Audio và `manifest.json` nằm ở `public/audio/<TopicName>/`.
 - File audio đã có sẽ được dùng lại. Sửa lời thoại thì xoá file audio của cảnh đó trước khi sinh lại.
-- Từ bài viết: dưới 50s thì viết dài thêm, trên 60s thì rút ngắn, rồi sinh lại. Từ kịch bản dán: làm theo Bước 3.
+- Từ bài viết: dưới 60s thì viết dài thêm, trên 90s thì rút ngắn, rồi sinh lại. Từ kịch bản dán: làm theo Bước 3.
 
 ## Bước 5: Dựng video
 
@@ -154,7 +157,8 @@ src/<TopicName>/
 ├── captions.ts
 ├── reveals.ts
 ├── useVietnameseFont.ts
-├── components/              # BrandHeader, SceneShell, SubtitleBox
+├── theme.ts                 # Màu, thẻ kính mờ, chữ gradient
+├── components/              # Backdrop, BrandHeader, SceneShell (gồm Reveal), SubtitleBox, Motion
 └── scenes/                  # Mỗi cảnh một file
 ```
 
@@ -188,72 +192,7 @@ export function useVietnameseFont(): void {
 }
 ```
 
-`components/SubtitleBox.tsx`:
-
-```tsx
-import React from "react";
-import { useCurrentFrame } from "remotion";
-
-// A digit takes about five letters to say aloud, so "720p" lasts longer than it looks.
-const speechWeight = (chunk: string) => chunk.length + 5 * (chunk.match(/\d/g)?.length ?? 0);
-
-export const SubtitleBox: React.FC<{ caption: string; speechFrames: number }> = ({ caption, speechFrames }) => {
-  const frame = useCurrentFrame();
-  const chunks = caption.split("|").map((chunk) => chunk.trim());
-  const total = chunks.reduce((sum, chunk) => sum + speechWeight(chunk), 0);
-  const position = (frame / Math.max(1, speechFrames)) * total;
-  let elapsed = 0;
-  let active = chunks[chunks.length - 1];
-  for (const chunk of chunks) {
-    elapsed += speechWeight(chunk);
-    if (position < elapsed) {
-      active = chunk;
-      break;
-    }
-  }
-  return (
-    <div style={{ position: "absolute", top: 1520, left: 45, right: 45, textAlign: "center" }}>
-      <div style={{ display: "inline-block", whiteSpace: "nowrap", fontSize: 37, fontWeight: 800, padding: "23px 29px", border: "2px solid #54f0ca60", background: "#091925", borderRadius: 60 }}>{active}</div>
-    </div>
-  );
-};
-```
-
-`components/SceneShell.tsx`, mỗi cảnh bọc nội dung trong `SceneShell` và hiện từng mục bằng `Reveal`. Nhãn cảnh nằm cố định, nội dung căn giữa bên dưới. Đổi `TOTAL_SCENES` theo số cảnh:
-
-```tsx
-import React from "react";
-import { AbsoluteFill, Audio, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { SubtitleBox } from "./SubtitleBox";
-
-const TOTAL_SCENES = 6;
-
-export type SceneProps = { caption: string; audioPath: string; duration: number; speechFrames: number };
-
-export const SceneShell: React.FC<SceneProps & { index: number; label: string; children: React.ReactNode; animateIn?: boolean }> = ({ index, label, caption, audioPath, duration, speechFrames, children, animateIn = true }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  // Platforms use the first frame as the thumbnail, so the opening scene starts fully visible.
-  const enter = animateIn ? spring({ frame, fps, config: { damping: 20 } }) : 1;
-  const opacity = interpolate(frame, [duration - 6, duration], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  return (
-    <AbsoluteFill style={{ opacity }}>
-      <Audio src={staticFile(audioPath)} />
-      <div style={{ position: "absolute", left: 88, right: 88, top: 290, fontSize: 28, letterSpacing: 3, color: "#54f0ca", fontWeight: 800 }}>{label}</div>
-      <div style={{ position: "absolute", left: 88, right: 88, top: 350, height: 1110, display: "flex", flexDirection: "column", justifyContent: "center", gap: 28, opacity: enter, transform: `translateY(${(1 - enter) * 30}px)` }}>{children}</div>
-      <SubtitleBox caption={caption} speechFrames={speechFrames} />
-      <div style={{ position: "absolute", bottom: 215, right: 90, fontSize: 24, color: "#8294ab", letterSpacing: 4 }}>0{index + 1} / 0{TOTAL_SCENES}</div>
-    </AbsoluteFill>
-  );
-};
-
-export const Reveal: React.FC<{ delay: number; children: React.ReactNode; style?: React.CSSProperties }> = ({ delay, children, style }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const p = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 120 } });
-  return <div style={{ ...style, opacity: p, transform: `translateY(${(1 - p) * 45}px)` }}>{children}</div>;
-};
-```
+`theme.ts` và `components/` (`Backdrop`, `BrandHeader`, `SceneShell` gồm `Reveal`, `SubtitleBox`, `Motion`): sao chép từ `src/ClaudeBugHunterRepo/` và làm theo `video-style`. `SceneShell` nhận `label` (không có `index`) và không có bộ đếm số cảnh.
 
 `reveals.ts`, mỗi cảnh một dòng, mỗi mục gồm tỉ lệ lời thoại đã đọc lúc thành phần hiện ra và âm thanh của nó. Hình và âm thanh cùng đọc bảng này, nên vẫn khớp khi sinh lại giọng đọc. Chọn tỉ lệ theo vị trí của ý đó trong lời thoại. Cảnh 1 để trống, vì mọi thứ đã hiện từ frame 0. Tỉ lệ đầu tiên của mỗi cảnh từ 0,05 trở lên, nếu không `SfxTrack` sẽ bỏ âm đó vì quá gần `mallet`. Số mục mỗi dòng phải bằng số `Reveal` của cảnh:
 
@@ -281,6 +220,7 @@ import { AbsoluteFill, Series, useCurrentFrame } from "remotion";
 import { SfxCue, SfxTrack } from "../sfx/SfxTrack";
 import { audioManifest } from "./audioData";
 import { sceneCaptions } from "./captions";
+import { Backdrop } from "./components/Backdrop";
 import { BrandHeader } from "./components/BrandHeader";
 import { SceneProps } from "./components/SceneShell";
 import { sceneReveals } from "./reveals";
@@ -310,7 +250,8 @@ export const TopicVideo: React.FC<{ channelName: string }> = ({ channelName }) =
   useVietnameseFont();
   const frame = useCurrentFrame();
   return (
-    <AbsoluteFill style={{ background: "radial-gradient(ellipse at 0% 30%,#123f46 0%,transparent 55%),radial-gradient(ellipse at 100% 75%,#1d284b 0%,transparent 55%),#070e19", color: "#f3f7ff", fontFamily: vietnameseFontFamily, whiteSpace: "pre-line" }}>
+    <AbsoluteFill style={{ color: "#f2f6ff", fontFamily: vietnameseFontFamily, whiteSpace: "pre-line" }}>
+      <Backdrop />
       <SfxTrack cues={sfxCues} />
       <BrandHeader channelName={channelName} />
       <Series>
@@ -323,27 +264,26 @@ export const TopicVideo: React.FC<{ channelName: string }> = ({ channelName }) =
           );
         })}
       </Series>
-      <div style={{ position: "absolute", left: 88, right: 88, bottom: 190, height: 5, background: "#ffffff16" }}>
-        <div style={{ width: `${(frame / topicDuration) * 100}%`, height: "100%", background: "#54f0ca" }} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 8, background: "rgba(255,255,255,0.1)" }}>
+        <div style={{ width: `${(frame / topicDuration) * 100}%`, height: "100%", background: "linear-gradient(90deg, #38a3ff, #00d2ff)" }} />
       </div>
     </AbsoluteFill>
   );
 };
 ```
 
-`BrandHeader`: huy hiệu `⚡ {channelName}` ở `top: 150`, căn giữa ngang, một dòng, viền bo tròn, cỡ 30px.
+`BrandHeader`: logo hoặc huy hiệu chữ ở `top: 100`, `left: 88`, theo `video-style`.
 
 Âm thanh: cue trên đã tạo sẵn `mallet` đầu mỗi cảnh. Trong `reveals.ts`, thẻ hoặc mục dùng `pop` hoặc `tick`, điểm nhấn hoặc kết luận dùng `ding`, lời kêu gọi theo dõi dùng `chime`. `SfxTrack` tự xử lý chồng tiếng. Không tải âm thanh từ trang không rõ giấy phép.
 
 Quy tắc hình và chữ:
 
-- Vùng nội dung rộng 904px. Không đặt nội dung thấp hơn thanh tiến trình ở `bottom: 190`, vì nút của TikTok và Reels sẽ che.
-- Cỡ chữ: tiêu đề 76-104px, nội dung 36-48px, phụ 28-32px.
+- Vùng nội dung rộng 904px. Không đặt nội dung thấp hơn `top: 1470`, vì phụ đề và nút của TikTok, Reels nằm ở dưới.
+- Cỡ chữ, chuyển động (`Reveal`, `Typewriter`, `CountUp`) và hook theo `video-style`.
 - Tiêu đề một dòng và URL dùng `whiteSpace: "nowrap"`. Be Vietnam Pro Black rộng khoảng 0,6 lần cỡ chữ mỗi ký tự, nên cỡ tối đa = 904 / (số ký tự x 0,6), và giới hạn này ưu tiên hơn khoảng cỡ chữ ở trên. Tiêu đề dài thì chia 2 dòng ở chỗ hợp nghĩa bằng `\n`.
 - Frame 0 là thumbnail trên các nền tảng: cảnh 1 đặt `animateIn={false}`, không dùng `Reveal`, mọi nội dung hiện đủ từ frame 0.
 - `source.png`: mở ảnh xem trước. Hiển thị trong khung rộng 904px, bo góc, chỉ gồm vùng tên trang, tiêu đề, tác giả và ngày. Đoạn văn và ảnh trong bài nằm ngoài khung, vì chúng có bản quyền. Ngày hoặc tác giả nằm dưới đoạn văn thì cắt tới hết tiêu đề và ghi chúng bằng chữ riêng. Bài của người khác: cắt ngay trên file `source.png`, để phần còn lại không nằm trong repo. Tính theo tỉ lệ: `<Img>` rộng 904px thì cao = 904 x chiều cao ảnh / chiều rộng ảnh. Đặt `maxWidth: "none"`. Dùng `staticFile`, không dùng URL ngoài.
 - Chỉ dùng `source.png`. Không tải riêng ảnh hay logo trong bài, vì chúng có bản quyền riêng.
-- Dùng `spring()` cho hiệu ứng xuất hiện, không dùng CSS transition. `interpolate()` luôn kèm `extrapolateLeft: "clamp"` và `extrapolateRight: "clamp"`.
 
 Đăng ký trong `src/Root.tsx`, với `TopicVideo` và `topicDuration` đổi theo tên video, `schema` lấy từ `types.ts`:
 
@@ -358,7 +298,7 @@ Quy tắc hình và chữ:
    ```bash
    npx remotion still <TopicName> out/<TopicName>/scene1.png --frame=<frame> --scale=0.5
    ```
-3. Ảnh cuối cảnh chỉ thấy cụm phụ đề cuối. Đo độ dài mọi cụm trong `captions.ts`, không cụm nào quá 45 ký tự, rồi render và xem một frame có cụm dài nhất.
+3. Ảnh cuối cảnh chỉ thấy cụm phụ đề cuối. Đo độ dài mọi cụm trong `captions.ts`, không cụm nào quá 28 ký tự, rồi render và xem một frame có cụm dài nhất.
 4. Kiểm tra: frame 0 đủ nội dung, chữ không tràn, không rớt một từ xuống dòng, phụ đề không bị cắt, tên nguồn và số liệu khớp `facts.md`.
 5. Kịch bản dán: so lời trong `audioData.ts` với `source.md`, phải giống từng chữ.
 6. Render bản cuối và đo thời lượng:
